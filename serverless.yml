@@ -1,0 +1,75 @@
+org: dyeoman1
+app: etrade
+service: etrade
+useDotenv: true
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 2048
+  timeout: 300
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Resource: '*'
+          Action:
+            - ses:SendEmail
+            - ses:SendRawEmail
+
+package:
+  patterns:
+    # exclude from builds
+    - '!node_modules/**'
+    - '!layers/**'
+
+plugins:
+  - serverless-iam-roles-per-function
+
+layers:
+  dotenv:
+    path: layers
+    package:
+      artifact: layers/dotenv.zip
+  eTradeApi:
+    path: layers
+    package:
+      artifact: layers/e-trade-api.zip
+  ses:
+    path: layers
+    package:
+      artifact: layers/ses.zip
+
+functions:
+  tlh:
+    handler: index.handler
+    url: true
+    layers:
+      - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:31
+      - !Ref DotenvLambdaLayer
+      - !Ref ETradeApiLambdaLayer
+      - !Ref SesLambdaLayer
+    environment:
+      # the environment variables are stored in https://app.serverless.com/{username}/apps/{appName}/{projectName}/{env}/{aws_region}/parameters
+      NODE_ENV: ${param:NODE_ENV}
+      EMAIL_TO: ${param:EMAIL_TO}
+      EMAIL_FROM: ${param:EMAIL_FROM}
+      ETRADE_OAUTH_TOKEN_ACTIVE: ${param:ETRADE_OAUTH_TOKEN_ACTIVE}
+      ETRADE_OAUTH_TOKEN: ${param:ETRADE_OAUTH_TOKEN}
+      ETRADE_OAUTH_TOKEN_SECRET: ${param:ETRADE_OAUTH_TOKEN_SECRET}
+      ETRADE_ACCOUNT_ID: ${param:ETRADE_ACCOUNT_ID}
+      ETRADE_USER: ${param:ETRADE_USER}
+      ETRADE_PASSWORD: ${param:ETRADE_PASSWORD}
+      ETRADE_API_KEY: ${param:ETRADE_API_KEY}
+      ETRADE_API_SECRET: ${param:ETRADE_API_SECRET}
+    events:
+      - schedule: cron(0 18 ? * MON-FRI *)
+    iamRoleStatements:
+      - Effect: Allow
+        Resource: '*'
+        Action:
+          - ses:SendEmail
+          - ses:SendRawEmail

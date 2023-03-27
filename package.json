@@ -1,0 +1,22 @@
+{
+  "name": "etrade",
+  "version": "1.0.0",
+  "description": "Daily eTrade cron job sells securities with harvestable losses and replace them with similar securities",
+  "author": "Daniel Yeoman",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.272.0",
+    "@sparticuz/chrome-aws-lambda": "^17.1.3",
+    "dotenv": "^16.0.3",
+    "e-trade-api": "^0.2.5",
+    "puppeteer-core": "^17.1.3"
+  },
+  "devDependencies": {
+    "eslint": "8.31.0",
+    "puppeteer": "^19.7.1",
+    "serverless-iam-roles-per-function": "^3.2.0"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}
