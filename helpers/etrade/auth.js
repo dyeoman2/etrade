@@ -11,10 +11,8 @@ const eTrade = new ETrade({
 const getNewToken = async () => {
   let browser;
   try {
-    console.log('request new token', process.env.ETRADE_API_KEY, process.env.ETRADE_API_SECRET);
-
     const requestTokenResults = await eTrade.requestToken();
-    console.log('requestTokenResults', requestTokenResults);
+    console.log('token request completed');
 
     // open puppeter browser
     browser = await puppeteer.launch({
@@ -41,16 +39,12 @@ const getNewToken = async () => {
     console.log('warningInitial', warningInitial);
 
     const username = process.env.ETRADE_USER;
-    console.log('username', username);
     await page.type('[name="USER"]', username);
-    const typedUsername = await page.$eval('[name="USER"]', (el) => el.value);
-    console.log('typedUsername', typedUsername);
+    await page.$eval('[name="USER"]', (el) => el.value);
 
     const password = process.env.ETRADE_PASSWORD;
-    console.log('password', password);
     await page.type('[name="PASSWORD"]', password);
-    const typedPassword = await page.$eval('[name="PASSWORD"]', (el) => el.value);
-    console.log('typedPassword', typedPassword);
+    await page.$eval('[name="PASSWORD"]', (el) => el.value);
 
     const urlInitial = await page.url();
     console.log('urlInitial', urlInitial);
@@ -76,15 +70,12 @@ const getNewToken = async () => {
 
     // verification code page
     const verificationCode = await page.$eval('[type="text"]', (el) => el.value);
-    console.log('verificationCode', verificationCode);
 
     const accessTokenResults = await eTrade.getAccessToken({
       key: requestTokenResults.oauth_token,
       secret: requestTokenResults.oauth_token_secret,
       code: verificationCode,
     });
-
-    console.log('accessTokenResults', accessTokenResults);
 
     const { oauth_token, oauth_token_secret } = accessTokenResults;
 
