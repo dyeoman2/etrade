@@ -169,11 +169,6 @@ const modelSecurities = [
     ticker: 'LDEM',
     rank: 93,
   },
-  {
-    sleeve: 'Emerging',
-    ticker: 'REMG',
-    rank: 92,
-  },
 ];
 
 module.exports = { modelSecurities };
