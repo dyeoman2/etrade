@@ -39,7 +39,7 @@ const taxLossHarvesting = async () => {
         // target securities to buy
         const targetSecurities = modelSecurities
           .filter((el) => el.sleeve === securityInModel.sleeve && el.ticker !== symbol)
-          .sort((a, b) => a.rank - b.rank);
+          .sort((a, b) => b.rank - a.rank);
 
         // exclude if the position doesn't have alternate securities in the model
         if (!targetSecurities?.length) {
