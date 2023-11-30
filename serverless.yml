@@ -65,8 +65,8 @@ functions:
       ETRADE_PASSWORD: ${param:ETRADE_PASSWORD}
       ETRADE_API_KEY: ${param:ETRADE_API_KEY}
       ETRADE_API_SECRET: ${param:ETRADE_API_SECRET}
-    events:
-      - schedule: cron(0 18 ? * MON-FRI *)
+    # events:
+    #   - schedule: cron(0 18 ? * MON-FRI *)
     iamRoleStatements:
       - Effect: Allow
         Resource: '*'
